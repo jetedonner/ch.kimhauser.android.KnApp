@@ -1,5 +1,6 @@
 package ch.kimhauser.android.knapp.online
 
+import ch.kimhauser.android.knapp.data.HoursClass
 import ch.kimhauser.android.knapp.data.KnAClass
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -32,15 +33,18 @@ class GetKnAs {
         }
     }
 
-    fun getOpen(wsURL:String, result: (knas: List<KnAClass>) -> Unit) {
+    fun getOpen(wsURL:String, result: (hours: List<HoursClass>) -> Unit) {
         try {
             GlobalScope.launch(Dispatchers.Default) {
                 try {
                     val calendar: Calendar = Calendar.getInstance()
                     val day: Int = calendar.get(Calendar.DAY_OF_WEEK) - 1
-                    val apiResponse = URL(wsURL + "/open/" + day.toString()).readText()
+                    val apiResponse = URL(wsURL + "/openng/" + day.toString()).readText()
                     launch(Dispatchers.Main) {
                         println(apiResponse)
+                        val typeToken = object : TypeToken<List<HoursClass>>() {}.type
+                        val hours = Gson().fromJson<List<HoursClass>>(apiResponse, typeToken)
+                        result(hours)
                     }
                 }catch (e2: Exception){
                     var exep = e2.message

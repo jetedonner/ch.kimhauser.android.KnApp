@@ -1,5 +1,6 @@
 package ch.kimhauser.android.knapp.ui.home
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -8,18 +9,19 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ListView
 import android.widget.TextView
-import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import ch.kimhauser.android.knapp.R
+import ch.kimhauser.android.knapp.data.HoursClass
 import java.text.SimpleDateFormat
 import java.util.*
-import ch.kimhauser.android.knapp.R
 import ch.kimhauser.android.knapp.data.KnAClass
 import ch.kimhauser.android.knapp.databinding.FragmentHomeBinding
+import ch.kimhauser.android.knapp.online.GetKnAs
 import ch.kimhauser.android.knapp.ui.dashboard.DashboardViewModel
 
 class HomeFragment : Fragment() {
@@ -30,6 +32,7 @@ class HomeFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
     private var _binding: FragmentHomeBinding? = null
 
+    private lateinit var listView: ListView
 //    private var _knas: <List<KnAClass>>? = null
 //        get() {
 //            return <List<KnAClass>>()
@@ -56,7 +59,24 @@ class HomeFragment : Fragment() {
             for (kna in knas){
                 binding.txtLogHome.append("\n" + kna.place)
             }
+
+//            listView = binding.recipeListView
+//            val listItems = arrayOfNulls<String>(knas.size)
+//// 3
+//            for (i in 0 until knas.size) {
+//                val recipe = knas[i]
+//                listItems[i] = recipe.place
+//            }
+//// 4
+//            val adapter =
+//                context?.let { ArrayAdapter(it, android.R.layout.simple_list_item_1, listItems) }
+//            listView.adapter = adapter
+
+//            val adapter = context?.let { HoursAdapter(it, knas) }
+//            listView.adapter = adapter
         })
+
+
 //        dashViewModel.knas.observe(this, Observer { item ->
 //            // Perform an action with the latest item data
 //        })
@@ -65,6 +85,7 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
 
         txtTime = binding.txtTime
+        listView = binding.recipeListView
 
         binding.cmdLocate.setOnClickListener {
             // Create a Uri from an intent string. Use the result to create an Intent.
@@ -93,6 +114,42 @@ class HomeFragment : Fragment() {
 
         // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
         homeViewModel._time.observe(this, nameObserver)
+
+        val sharedPref = activity?.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+        if (sharedPref != null) {
+
+            val wsURL = sharedPref.getString(
+                getString(R.string.preference_online_sync_url), getString(
+                    R.string.preference_online_sync_url_std
+                )
+            )
+            if (wsURL != null) {
+                GetKnAs().getAllKnAs(wsURL, fun(knas: List<KnAClass>) {
+                    //viewModel.setKnAs(knas)
+                    // 123
+                    for (kna in knas) {
+        //                appendLog("========= KnA: =========")
+        //                appendLog("Place: " + kna.place)
+        //                appendLog("Desc: " + kna.description)
+        //                appendLog("Address: " + kna.address)
+        //                appendLog("========================")
+                    }
+
+                    GetKnAs().getOpen(wsURL, fun(hours: List<HoursClass>) {
+
+                        val adapter = context?.let { HoursAdapter(it, hours) }
+                        listView.adapter = adapter
+//                        for (hour in hours) {
+//        //                    appendLog("========= Hour: =========")
+//        //                    appendLog("Place: " + hour.place)
+//        //                    appendLog("Desc: " + hour.description)
+//        //                    appendLog("Address: " + hour.address)
+//        //                    appendLog("========================")
+//                        }
+                    })
+                })
+            }
+        }
 
         return root
     }

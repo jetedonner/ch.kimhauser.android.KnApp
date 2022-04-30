@@ -12,6 +12,7 @@ import ch.kimhauser.android.knapp.data.KnAClass
 import ch.kimhauser.android.knapp.databinding.FragmentDashboardBinding
 import android.text.method.ScrollingMovementMethod
 import androidx.fragment.app.activityViewModels
+import ch.kimhauser.android.knapp.data.HoursClass
 import ch.kimhauser.android.knapp.online.GetKnAs
 
 class DashboardFragment : Fragment() {
@@ -69,8 +70,14 @@ class DashboardFragment : Fragment() {
                 appendLog("========================")
             }
 
-            GetKnAs().getOpen(wsURL, fun (knas: List<KnAClass>){
-
+            GetKnAs().getOpen(wsURL, fun (hours: List<HoursClass>){
+                for (hour in hours) {
+                    appendLog("========= Hour: =========")
+                    appendLog("Place: " + hour.place)
+                    appendLog("Desc: " + hour.description)
+                    appendLog("Address: " + hour.address)
+                    appendLog("========================")
+                }
             })
         })
 //        try {
