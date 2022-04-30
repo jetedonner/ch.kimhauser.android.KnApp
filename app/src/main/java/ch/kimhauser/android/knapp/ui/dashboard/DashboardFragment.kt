@@ -5,17 +5,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import ch.kimhauser.android.knapp.R
+import ch.kimhauser.android.knapp.data.KnAClass
 import ch.kimhauser.android.knapp.databinding.FragmentDashboardBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.net.URL
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import android.text.method.ScrollingMovementMethod
 
 class DashboardFragment : Fragment() {
 
@@ -37,6 +39,8 @@ class DashboardFragment : Fragment() {
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        binding.txtLog.setMovementMethod(ScrollingMovementMethod())
+
         val sharedPref = activity?.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
         if (sharedPref != null) {
 
@@ -47,11 +51,23 @@ class DashboardFragment : Fragment() {
             try {
                 GlobalScope.launch(Dispatchers.Default) {  // replaces doAsync
                     try {
-                        val apiResponse = URL(wsURL + "/knas").readText()
-                        var teste = apiResponse
+                        val apiResponse = URL(wsURL + "/knasng").readText()
+                        //var teste = apiResponse
                         launch(Dispatchers.Main) { // replaces uiThread
-                            appendLog(teste)
-                            System.out.println(teste)
+
+                            appendLog(apiResponse)
+                            System.out.println(apiResponse)
+
+                            val typeToken = object : TypeToken<List<KnAClass>>() {}.type
+                            val knas = Gson().fromJson<List<KnAClass>>(apiResponse, typeToken)
+
+                            for (kna in knas) {
+                                appendLog("========= KnA: =========")
+                                appendLog("Place: " + kna.place)
+                                appendLog("Desc: " + kna.description)
+                                appendLog("Address: " + kna.address)
+                                appendLog("========================")
+                            }
                         }
                     }catch (e2:Exception){
                         var exep = e2.message
@@ -70,14 +86,6 @@ class DashboardFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        /*val sharedPref = activity?.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-        if (sharedPref != null) {
-            with (sharedPref.edit()) {
-                putBoolean(getString(R.string.preference_auto_online_sync), binding.swtAutoSync.isChecked)
-                apply()
-            }
-        }*/
-
         val sharedPref = activity?.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
         if (sharedPref != null) {
             sharedPref.edit()
