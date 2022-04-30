@@ -43,7 +43,11 @@ class GetKnAs {
                     launch(Dispatchers.Main) {
                         println(apiResponse)
                         val typeToken = object : TypeToken<List<HoursClass>>() {}.type
-                        val hours = Gson().fromJson<List<HoursClass>>(apiResponse, typeToken)
+                        var hours = Gson().fromJson<List<HoursClass>>(apiResponse, typeToken)
+//                        if(hours.size == 0){
+//                            var emptyHour = HoursClass(-1, -1, "", 0, 0, 0, 0, 1, "", "NO K&A open", "", "At the moment there is no K&A open")
+//                            hours += emptyHour
+//                        }
                         result(hours)
                     }
                 }catch (e2: Exception){

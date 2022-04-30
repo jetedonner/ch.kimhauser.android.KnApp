@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -56,9 +57,9 @@ class HomeFragment : Fragment() {
         viewModel.knas.observe(viewLifecycleOwner, Observer<List<KnAClass>> { knas ->
             // Update the selected filters UI
             //System.out.println(knas[0].place)
-            for (kna in knas){
-                binding.txtLogHome.append("\n" + kna.place)
-            }
+//            for (kna in knas){
+//                binding.txtLogHome.append("\n" + kna.place)
+//            }
 
 //            listView = binding.recipeListView
 //            val listItems = arrayOfNulls<String>(knas.size)
@@ -83,20 +84,20 @@ class HomeFragment : Fragment() {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
+        binding.prgLoading.isVisible = true
         txtTime = binding.txtTime
         listView = binding.recipeListView
 
-        binding.cmdLocate.setOnClickListener {
-            // Create a Uri from an intent string. Use the result to create an Intent.
-            val gmmIntentUri = Uri.parse("google.streetview:cbll=46.414382,10.013988")
-            // Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
-            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-            // Make the Intent explicit by setting the Google Maps package
-            mapIntent.setPackage("com.google.android.apps.maps")
-            // Attempt to start an activity that can handle the Intent
-            startActivity(mapIntent)
-        }
+//        binding.cmdLocate.setOnClickListener {
+//            // Create a Uri from an intent string. Use the result to create an Intent.
+//            val gmmIntentUri = Uri.parse("google.streetview:cbll=46.414382,10.013988")
+//            // Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
+//            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+//            // Make the Intent explicit by setting the Google Maps package
+//            mapIntent.setPackage("com.google.android.apps.maps")
+//            // Attempt to start an activity that can handle the Intent
+//            startActivity(mapIntent)
+//        }
 
         val mainHandler = Handler(Looper.getMainLooper())
         mainHandler.post(object : Runnable {
@@ -136,9 +137,14 @@ class HomeFragment : Fragment() {
                     }
 
                     GetKnAs().getOpen(wsURL, fun(hours: List<HoursClass>) {
-
-                        val adapter = context?.let { HoursAdapter(it, hours) }
-                        listView.adapter = adapter
+                        if(hours.size == 0){
+                            binding.lblNoKnA.isVisible = true
+                        }else {
+                            binding.lblNoKnA.isVisible = false
+                            val adapter = context?.let { HoursAdapter(it, hours) }
+                            listView.adapter = adapter
+                        }
+                        binding.prgLoading.isVisible = false
 //                        for (hour in hours) {
 //        //                    appendLog("========= Hour: =========")
 //        //                    appendLog("Place: " + hour.place)
