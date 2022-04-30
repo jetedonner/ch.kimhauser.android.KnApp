@@ -9,18 +9,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import java.text.SimpleDateFormat
 import java.util.*
 import ch.kimhauser.android.knapp.R
+import ch.kimhauser.android.knapp.data.KnAClass
 import ch.kimhauser.android.knapp.databinding.FragmentHomeBinding
+import ch.kimhauser.android.knapp.ui.dashboard.DashboardViewModel
 
 class HomeFragment : Fragment() {
 
+//    private val viewModel: ListViewModel by activityViewModels()
+    private val viewModel: DashboardViewModel by activityViewModels()
+
     private lateinit var homeViewModel: HomeViewModel
     private var _binding: FragmentHomeBinding? = null
+
+//    private var _knas: <List<KnAClass>>? = null
+//        get() {
+//            return <List<KnAClass>>()
+//        }
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -36,6 +49,17 @@ class HomeFragment : Fragment() {
     ): View? {
         homeViewModel =
             ViewModelProvider(this).get(HomeViewModel::class.java)
+
+        viewModel.knas.observe(viewLifecycleOwner, Observer<List<KnAClass>> { knas ->
+            // Update the selected filters UI
+            //System.out.println(knas[0].place)
+            for (kna in knas){
+                binding.txtLogHome.append("\n" + kna.place)
+            }
+        })
+//        dashViewModel.knas.observe(this, Observer { item ->
+//            // Perform an action with the latest item data
+//        })
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root

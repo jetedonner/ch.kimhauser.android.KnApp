@@ -10,17 +10,13 @@ import androidx.lifecycle.ViewModelProvider
 import ch.kimhauser.android.knapp.R
 import ch.kimhauser.android.knapp.data.KnAClass
 import ch.kimhauser.android.knapp.databinding.FragmentDashboardBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import java.lang.Exception
-import java.net.URL
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import android.text.method.ScrollingMovementMethod
+import androidx.fragment.app.activityViewModels
+import ch.kimhauser.android.knapp.online.GetKnAs
 
 class DashboardFragment : Fragment() {
 
+    private val viewModel: DashboardViewModel by activityViewModels()
     private lateinit var dashboardViewModel: DashboardViewModel
     private var _binding: FragmentDashboardBinding? = null
 
@@ -40,8 +36,6 @@ class DashboardFragment : Fragment() {
         val root: View = binding.root
 
         binding.txtLog.setMovementMethod(ScrollingMovementMethod())
-
-
 
         val sharedPref = activity?.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
         if (sharedPref != null) {
@@ -64,35 +58,50 @@ class DashboardFragment : Fragment() {
     }
 
     fun onlineSync(wsURL:String){
-        try {
-            GlobalScope.launch(Dispatchers.Default) {  // replaces doAsync
-                try {
-                    val apiResponse = URL(wsURL + "/knasng").readText()
-                    //var teste = apiResponse
-                    launch(Dispatchers.Main) { // replaces uiThread
-
-                        appendLog(apiResponse)
-                        System.out.println(apiResponse)
-
-                        val typeToken = object : TypeToken<List<KnAClass>>() {}.type
-                        val knas = Gson().fromJson<List<KnAClass>>(apiResponse, typeToken)
-
-                        for (kna in knas) {
-                            appendLog("========= KnA: =========")
-                            appendLog("Place: " + kna.place)
-                            appendLog("Desc: " + kna.description)
-                            appendLog("Address: " + kna.address)
-                            appendLog("========================")
-                        }
-                    }
-                }catch (e2:Exception){
-                    var exep = e2.message
-                    appendLog(exep.toString())
-                }
+        GetKnAs().getAllKnAs(wsURL, fun (knas: List<KnAClass>) {
+            viewModel.setKnAs(knas)
+            // 123
+            for (kna in knas) {
+                appendLog("========= KnA: =========")
+                appendLog("Place: " + kna.place)
+                appendLog("Desc: " + kna.description)
+                appendLog("Address: " + kna.address)
+                appendLog("========================")
             }
-        }catch (e:Exception){
-            var exep = e.message
-        }
+
+            GetKnAs().getOpen(wsURL, fun (knas: List<KnAClass>){
+
+            })
+        })
+//        try {
+//            GlobalScope.launch(Dispatchers.Default) {  // replaces doAsync
+//                try {
+//                    val apiResponse = URL(wsURL + "/knasng").readText()
+//                    //var teste = apiResponse
+//                    launch(Dispatchers.Main) { // replaces uiThread
+//
+//                        appendLog(apiResponse)
+//                        System.out.println(apiResponse)
+//
+//                        val typeToken = object : TypeToken<List<KnAClass>>() {}.type
+//                        val knas = Gson().fromJson<List<KnAClass>>(apiResponse, typeToken)
+//
+//                        for (kna in knas) {
+//                            appendLog("========= KnA: =========")
+//                            appendLog("Place: " + kna.place)
+//                            appendLog("Desc: " + kna.description)
+//                            appendLog("Address: " + kna.address)
+//                            appendLog("========================")
+//                        }
+//                    }
+//                }catch (e2:Exception){
+//                    var exep = e2.message
+//                    appendLog(exep.toString())
+//                }
+//            }
+//        }catch (e:Exception){
+//            var exep = e.message
+//        }
     }
 
     fun appendLog(msg:String){
