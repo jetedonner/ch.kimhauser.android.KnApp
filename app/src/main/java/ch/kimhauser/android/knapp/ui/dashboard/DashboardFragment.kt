@@ -41,6 +41,8 @@ class DashboardFragment : Fragment() {
 
         binding.txtLog.setMovementMethod(ScrollingMovementMethod())
 
+
+
         val sharedPref = activity?.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
         if (sharedPref != null) {
 
@@ -48,37 +50,49 @@ class DashboardFragment : Fragment() {
             binding.txtUpdateURL.setText(wsURL)
             binding.swtAutoSync.isChecked = sharedPref.getBoolean(getString(R.string.preference_auto_online_sync), false)
 
-            try {
-                GlobalScope.launch(Dispatchers.Default) {  // replaces doAsync
-                    try {
-                        val apiResponse = URL(wsURL + "/knasng").readText()
-                        //var teste = apiResponse
-                        launch(Dispatchers.Main) { // replaces uiThread
-
-                            appendLog(apiResponse)
-                            System.out.println(apiResponse)
-
-                            val typeToken = object : TypeToken<List<KnAClass>>() {}.type
-                            val knas = Gson().fromJson<List<KnAClass>>(apiResponse, typeToken)
-
-                            for (kna in knas) {
-                                appendLog("========= KnA: =========")
-                                appendLog("Place: " + kna.place)
-                                appendLog("Desc: " + kna.description)
-                                appendLog("Address: " + kna.address)
-                                appendLog("========================")
-                            }
-                        }
-                    }catch (e2:Exception){
-                        var exep = e2.message
-                        appendLog(exep.toString())
-                    }
+            binding.cmdOnlineSync.setOnClickListener {
+                if (wsURL != null) {
+                    onlineSync(wsURL)
                 }
-            }catch (e:Exception){
-                var exep = e.message
+            }
+
+            if (wsURL != null) {
+                onlineSync(wsURL)
             }
         }
         return root
+    }
+
+    fun onlineSync(wsURL:String){
+        try {
+            GlobalScope.launch(Dispatchers.Default) {  // replaces doAsync
+                try {
+                    val apiResponse = URL(wsURL + "/knasng").readText()
+                    //var teste = apiResponse
+                    launch(Dispatchers.Main) { // replaces uiThread
+
+                        appendLog(apiResponse)
+                        System.out.println(apiResponse)
+
+                        val typeToken = object : TypeToken<List<KnAClass>>() {}.type
+                        val knas = Gson().fromJson<List<KnAClass>>(apiResponse, typeToken)
+
+                        for (kna in knas) {
+                            appendLog("========= KnA: =========")
+                            appendLog("Place: " + kna.place)
+                            appendLog("Desc: " + kna.description)
+                            appendLog("Address: " + kna.address)
+                            appendLog("========================")
+                        }
+                    }
+                }catch (e2:Exception){
+                    var exep = e2.message
+                    appendLog(exep.toString())
+                }
+            }
+        }catch (e:Exception){
+            var exep = e.message
+        }
     }
 
     fun appendLog(msg:String){

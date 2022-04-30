@@ -60,6 +60,16 @@ class HomeFragment : Fragment() {
                 mainHandler.postDelayed(this, 1000)
             }
         })
+
+        // Create the observer which updates the UI.
+        val nameObserver = Observer<String> { newTime ->
+            // Update the UI, in this case, a TextView.
+            txtTime!!.text = newTime
+        }
+
+        // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
+        homeViewModel._time.observe(this, nameObserver)
+
         return root
     }
 
@@ -67,7 +77,8 @@ class HomeFragment : Fragment() {
         if(txtTime != null) {
             val calendar: Calendar = Calendar.getInstance()
             val dateTime = simpleDateFormat.format(calendar.time)
-            txtTime!!.text = dateTime
+            //txtTime!!.text = dateTime
+            homeViewModel._time.setValue(dateTime)
         }
     }
 
