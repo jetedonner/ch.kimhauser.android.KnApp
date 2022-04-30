@@ -3,4 +3,8 @@
     <string name="title_home">K&amp;A Offen</string>
     <string name="title_dashboard">Erweitert</string>
     <string name="title_notifications">Credits</string>
+    <string name="preference_file_key">ch.kimhauser.android.knapp_preferences</string>
+    <string name="preference_auto_online_sync">auto_online_sync_bool</string>
+    <string name="preference_online_sync_url">online_sync_url</string>
+    <string name="preference_online_sync_url_std">http://knappws.kimhauser.ch</string>
 </resources>
