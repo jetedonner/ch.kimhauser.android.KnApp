@@ -16,6 +16,8 @@ import android.text.SpannableString
 import android.net.Uri
 
 import android.content.Intent
+import androidx.core.view.isVisible
+import java.util.*
 
 
 class HoursAdapter(private val context: Context,
@@ -64,6 +66,27 @@ class HoursAdapter(private val context: Context,
         var endMinutes = addEnd + recipe.end_minute.toString()
         var endTime =  recipe.end_hour.toString() + ":" + endMinutes
 
+        val tmpDate = Date()
+        val calendarStart = Calendar.getInstance()
+        calendarStart.time = tmpDate
+        calendarStart.set(Calendar.HOUR_OF_DAY, recipe.start_hour)
+        calendarStart.set(Calendar.MINUTE, recipe.start_minute)
+        calendarStart.set(Calendar.SECOND, 0)
+
+        val calendarEnd = Calendar.getInstance()
+        calendarEnd.time = tmpDate
+        calendarEnd.set(Calendar.HOUR_OF_DAY, recipe.end_hour)
+        calendarEnd.set(Calendar.MINUTE, recipe.end_minute)
+        calendarEnd.set(Calendar.SECOND, 0)
+        val difTime = calendarEnd.time.time - calendarStart.time.time
+
+        var closesSoon = false
+        if((difTime / 1000 / 60) <= 60/* || (difTime / 1000 / 60) >= -60*/){
+            println("CLOSES SOON!!!")
+            closesSoon = true
+        }
+        //calendarEnd.time // Your changed date object
+
         subtitleTextView.text = startTime + " - " + endTime
         val spanStr = SpannableString(recipe.address.toString())
         spanStr.setSpan(UnderlineSpan(), 0, spanStr.length, 0)
@@ -79,6 +102,7 @@ class HoursAdapter(private val context: Context,
             parent.context.startActivity(geoIntent)
         }
         lbl_closes_soon.setText("Schliesst bald!")
+        lbl_closes_soon.isVisible = closesSoon
         return rowView
     }
 }
