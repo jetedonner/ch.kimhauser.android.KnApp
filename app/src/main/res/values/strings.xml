@@ -1,14 +1,14 @@
 <resources>
     <string name="app_name">KnApp</string>
-    <string name="title_home">K&amp;A Offen</string>
-    <string name="title_dashboard">Erweitert</string>
+    <string name="title_home">Welche K&amp;A ist offen</string>
+    <string name="title_dashboard">Einstellungen</string>
     <string name="title_notifications">Credits</string>
     <string name="preference_file_key">ch.kimhauser.android.knapp_preferences</string>
     <string name="preference_auto_online_sync">auto_online_sync_bool</string>
     <string name="preference_online_sync_url">online_sync_url</string>
     <string name="preference_online_sync_url_std">http://knappws.kimhauser.ch</string>
     <string name="stadt_zuerich_logo">Stadt Zuerich Logo</string>
-    <string name="time">Time:</string>
-    <string name="k_amp_a"><![CDATA[K&A open:]]></string>
-    <string name="no_k_amp_a_open"><![CDATA[NO K&A open!]]></string>
+    <string name="time">Zeit:</string>
+    <string name="k_amp_a"><![CDATA[K&A offen:]]></string>
+    <string name="no_k_amp_a_open"><![CDATA[Keine K&A offen!]]></string>
 </resources>

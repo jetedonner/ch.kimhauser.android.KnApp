@@ -1,8 +1,6 @@
 package ch.kimhauser.android.knapp.ui.home
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -27,17 +25,12 @@ import ch.kimhauser.android.knapp.ui.dashboard.DashboardViewModel
 
 class HomeFragment : Fragment() {
 
-//    private val viewModel: ListViewModel by activityViewModels()
     private val viewModel: DashboardViewModel by activityViewModels()
 
     private lateinit var homeViewModel: HomeViewModel
     private var _binding: FragmentHomeBinding? = null
 
     private lateinit var listView: ListView
-//    private var _knas: <List<KnAClass>>? = null
-//        get() {
-//            return <List<KnAClass>>()
-//        }
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -84,6 +77,8 @@ class HomeFragment : Fragment() {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        binding.prgLoading.visibility == View.VISIBLE
         binding.prgLoading.isVisible = true
         txtTime = binding.txtTime
         listView = binding.recipeListView
@@ -127,36 +122,29 @@ class HomeFragment : Fragment() {
             if (wsURL != null) {
                 GetKnAs().getAllKnAs(wsURL, fun(knas: List<KnAClass>) {
                     //viewModel.setKnAs(knas)
-                    // 123
-                    for (kna in knas) {
-        //                appendLog("========= KnA: =========")
-        //                appendLog("Place: " + kna.place)
-        //                appendLog("Desc: " + kna.description)
-        //                appendLog("Address: " + kna.address)
-        //                appendLog("========================")
-                    }
+//                    for (kna in knas) {
+//        //                appendLog("========= KnA: =========")
+//        //                appendLog("Place: " + kna.place)
+//        //                appendLog("Desc: " + kna.description)
+//        //                appendLog("Address: " + kna.address)
+//        //                appendLog("========================")
+//                    }
 
                     GetKnAs().getOpen(wsURL, fun(hours: List<HoursClass>) {
                         if(hours.size == 0){
-                            binding.lblNoKnA.isVisible = true
+                            binding.lblNoKnA.visibility == View.VISIBLE
                         }else {
+                            binding.lblNoKnA.visibility == View.GONE
                             binding.lblNoKnA.isVisible = false
                             val adapter = context?.let { HoursAdapter(it, hours) }
                             listView.adapter = adapter
                         }
+                        binding.prgLoading.visibility == View.GONE
                         binding.prgLoading.isVisible = false
-//                        for (hour in hours) {
-//        //                    appendLog("========= Hour: =========")
-//        //                    appendLog("Place: " + hour.place)
-//        //                    appendLog("Desc: " + hour.description)
-//        //                    appendLog("Address: " + hour.address)
-//        //                    appendLog("========================")
-//                        }
                     })
                 })
             }
         }
-
         return root
     }
 
@@ -164,7 +152,6 @@ class HomeFragment : Fragment() {
         if(txtTime != null) {
             val calendar: Calendar = Calendar.getInstance()
             val dateTime = simpleDateFormat.format(calendar.time)
-            //txtTime!!.text = dateTime
             homeViewModel._time.setValue(dateTime)
         }
     }

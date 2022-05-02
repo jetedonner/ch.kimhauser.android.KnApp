@@ -18,7 +18,7 @@
         android:paddingBottom="20dp"
         android:text="@string/time"
         android:textAlignment="center"
-        android:textSize="34sp"
+        android:textSize="20sp"
         android:textStyle="bold" />
 
     <TextView
@@ -28,7 +28,8 @@
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
         android:textAlignment="center"
-        android:textSize="20sp" />
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textView3"
@@ -38,7 +39,7 @@
         android:paddingBottom="20dp"
         android:text="@string/k_amp_a"
         android:textAlignment="center"
-        android:textSize="34sp"
+        android:textSize="20sp"
         android:textStyle="bold" />
 
     <LinearLayout
