@@ -44,26 +44,16 @@ class HoursAdapter(private val context: Context,
 
     //4
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        // Get view for row item
+
         val rowView = inflater.inflate(R.layout.list_item_recipe, parent, false)
-
-        // Get title element
         val titleTextView = rowView.findViewById(R.id.recipe_list_title) as TextView
-
-// Get subtitle element
         val subtitleTextView = rowView.findViewById(R.id.recipe_list_subtitle) as TextView
-
-// Get detail element
         val detailTextView = rowView.findViewById(R.id.recipe_list_detail) as TextView
 
-// Get thumbnail element
         val thumbnailImageView = rowView.findViewById(R.id.recipe_list_thumbnail) as ImageView
-
-        // 1
         val recipe = getItem(position) as HoursClass
 
-// 2
-        titleTextView.text = /*recipe.place + " - " + */recipe.description
+        titleTextView.text = recipe.description /*recipe.place + " - " + */
         var addStart = ""
         if(recipe.start_minute < 10)
             addStart = "0"
@@ -76,19 +66,14 @@ class HoursAdapter(private val context: Context,
         detailTextView.setText(spanStr)
         detailTextView.setOnClickListener {
             val geoIntent = Intent(
-                Intent.ACTION_VIEW, Uri.parse(
+                Intent.ACTION_VIEW,
+                Uri.parse(
                     "geo:0,0?q="
-                            + detailTextView.getText().toString()
-                )
+                            + detailTextView.text.toString(),
+                ),
             )
             parent.context.startActivity(geoIntent)
-//            startActivity(context, geoIntent)
         }
-        //detailTextView.text = "Address: " + recipe.address
-
-// 3
-        //Picasso.with(context).load(recipe.imageUrl).placeholder(R.mipmap.ic_launcher).into(thumbnailImageView)
-
         return rowView
     }
 }
