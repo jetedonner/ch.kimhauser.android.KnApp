@@ -17,9 +17,9 @@
       android:layout_marginBottom="6dp"
       android:contentDescription="@string/stadt_zuerich_logo"
       android:scaleType="centerInside"
-      app:srcCompat="@drawable/imgstadtzuerichlogo"
-      tools:src="@drawable/imgstadtzuerichlogo"
-      tools:srcCompat="@drawable/imgstadtzuerichlogo" />
+      app:srcCompat="@drawable/kna_64x64_round"
+      tools:src="@drawable/kna_64x64_round"
+      tools:srcCompat="@drawable/kna_64x64_round" />
 
   <!-- android:layout_toStartOf="@id/recipe_list_detail" -->
   <RelativeLayout

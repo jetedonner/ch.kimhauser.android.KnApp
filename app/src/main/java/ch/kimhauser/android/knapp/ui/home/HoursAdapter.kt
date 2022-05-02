@@ -63,7 +63,7 @@ class HoursAdapter(private val context: Context,
         val recipe = getItem(position) as HoursClass
 
 // 2
-        titleTextView.text = recipe.place + " - " + recipe.description
+        titleTextView.text = /*recipe.place + " - " + */recipe.description
         var addStart = ""
         if(recipe.start_minute < 10)
             addStart = "0"
