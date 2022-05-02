@@ -9,16 +9,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import ch.kimhauser.android.knapp.R
 import ch.kimhauser.android.knapp.data.HoursClass
-import ch.kimhauser.android.knapp.data.KnAClass
 import android.text.style.UnderlineSpan
 
 import android.text.SpannableString
-import androidx.core.content.ContextCompat.startActivity
 
 import android.net.Uri
 
 import android.content.Intent
-import androidx.core.content.ContextCompat
 
 
 class HoursAdapter(private val context: Context,
@@ -45,9 +42,10 @@ class HoursAdapter(private val context: Context,
     //4
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
-        val rowView = inflater.inflate(R.layout.list_item_recipe, parent, false)
+        val rowView = inflater.inflate(R.layout.list_item_kna_time, parent, false)
         val titleTextView = rowView.findViewById(R.id.recipe_list_title) as TextView
         val subtitleTextView = rowView.findViewById(R.id.recipe_list_subtitle) as TextView
+        val lbl_closes_soon = rowView.findViewById(R.id.lbl_closes_soon) as TextView
         val detailTextView = rowView.findViewById(R.id.recipe_list_detail) as TextView
 
         val thumbnailImageView = rowView.findViewById(R.id.recipe_list_thumbnail) as ImageView
@@ -57,10 +55,16 @@ class HoursAdapter(private val context: Context,
         var addStart = ""
         if(recipe.start_minute < 10)
             addStart = "0"
+        var startMinutes = addStart + recipe.start_minute.toString()
+        var startTime = recipe.start_hour.toString() + ":" + startMinutes
+
         var addEnd = ""
         if(recipe.end_minute < 10)
             addEnd = "0"
-        subtitleTextView.text = recipe.start_hour.toString() + ":" + addStart + recipe.start_minute.toString() + " - " + recipe.end_hour.toString() + ":" + addEnd + recipe.end_minute.toString()
+        var endMinutes = addEnd + recipe.end_minute.toString()
+        var endTime =  recipe.end_hour.toString() + ":" + endMinutes
+
+        subtitleTextView.text = startTime + " - " + endTime
         val spanStr = SpannableString(recipe.address.toString())
         spanStr.setSpan(UnderlineSpan(), 0, spanStr.length, 0)
         detailTextView.setText(spanStr)
@@ -74,6 +78,7 @@ class HoursAdapter(private val context: Context,
             )
             parent.context.startActivity(geoIntent)
         }
+        lbl_closes_soon.setText("Schliesst bald!")
         return rowView
     }
 }

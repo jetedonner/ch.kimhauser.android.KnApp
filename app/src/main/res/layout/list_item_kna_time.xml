@@ -42,24 +42,44 @@
         android:textStyle="bold"
         tools:text="Title" />
 
-    <TextView
-        android:id="@+id/recipe_list_subtitle"
+    <LinearLayout
+        android:id="@+id/recipe_list_lltime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/recipe_list_title"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="2dp"
         android:layout_marginRight="8dp"
-        android:ellipsize="end"
-        android:maxLines="3"
-        android:textSize="20sp"
-        tools:text="Subtitle" />
+        android:orientation="horizontal">
+
+      <TextView
+          android:id="@+id/recipe_list_subtitle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginRight="8dp"
+          android:ellipsize="none"
+          android:maxLines="3"
+          android:textSize="20sp"
+          tools:text="Subtitle" />
+
+      <TextView
+          android:id="@+id/lbl_closes_soon"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:ellipsize="end"
+          android:maxLines="3"
+          android:textColor="#BD0000"
+          android:textSize="12sp"
+          android:textStyle="bold"
+          tools:text="TESET" />
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/recipe_list_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/recipe_list_subtitle"
+        android:layout_below="@+id/recipe_list_lltime"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="2dp"
         android:layout_marginRight="8dp"
