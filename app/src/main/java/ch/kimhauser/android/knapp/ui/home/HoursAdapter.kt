@@ -102,6 +102,7 @@ class HoursAdapter(private val context: Context,
             parent.context.startActivity(geoIntent)
         }
         lbl_closes_soon.setText("Schliesst bald!")
+        lbl_closes_soon.setTextColor(context.getResources().getColor(R.color.red))
         lbl_closes_soon.isVisible = closesSoon
         return rowView
     }

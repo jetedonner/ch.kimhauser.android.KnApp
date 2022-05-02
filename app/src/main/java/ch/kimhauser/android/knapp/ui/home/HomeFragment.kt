@@ -110,7 +110,12 @@ class HomeFragment : Fragment() {
 
         // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
         homeViewModel._time.observe(this, nameObserver)
+        
+        return root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val sharedPref = activity?.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
         if (sharedPref != null) {
 
@@ -121,15 +126,6 @@ class HomeFragment : Fragment() {
             )
             if (wsURL != null) {
                 GetKnAs().getAllKnAs(wsURL, fun(knas: List<KnAClass>) {
-                    //viewModel.setKnAs(knas)
-//                    for (kna in knas) {
-//        //                appendLog("========= KnA: =========")
-//        //                appendLog("Place: " + kna.place)
-//        //                appendLog("Desc: " + kna.description)
-//        //                appendLog("Address: " + kna.address)
-//        //                appendLog("========================")
-//                    }
-
                     GetKnAs().getOpen(wsURL, fun(hours: List<HoursClass>) {
                         if(hours.size == 0){
                             binding.lblNoKnA.visibility == View.VISIBLE
@@ -145,7 +141,6 @@ class HomeFragment : Fragment() {
                 })
             }
         }
-        return root
     }
 
     fun updateTime(){
